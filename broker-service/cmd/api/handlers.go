@@ -12,5 +12,5 @@ func (app *Config) Broker(w http.ResponseWriter, r *http.Request) {
 		Message: "Hit the Broker",
 	}
 
-	utils.WriteJson(w, http.StatusOK, payload)
+	app.WriteJson(w, http.StatusOK, payload)
 }

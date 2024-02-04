@@ -4,8 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-
-	"github.com/OlegChuev/microservices/utils"
 )
 
 func (app *Config) Authenticate(w http.ResponseWriter, r *http.Request) {
@@ -14,23 +12,28 @@ func (app *Config) Authenticate(w http.ResponseWriter, r *http.Request) {
 		Password string `json:"password"`
 	}
 
-	err := utils.ReadJson(w, r, &requestPayload)
+	err := app.ReadJson(w, r, &requestPayload)
 	if err != nil {
-		utils.ErrorJson(w, err, http.StatusBadRequest)
+		app.ErrorJson(w, err, http.StatusBadRequest)
 		return
 	}
 
 	user, err := app.Models.User.GetByEmail(requestPayload.Email)
 	if err != nil {
-		utils.ErrorJson(w, errors.New("invalid credentials"), http.StatusBadRequest)
+		app.ErrorJson(w, errors.New("invalid credentials"), http.StatusBadRequest)
+		return
 	}
 
 	valid, err := user.PasswordMatches(requestPayload.Password)
 	if err != nil || !valid {
-		utils.ErrorJson(w, errors.New("invalid credentials"), http.StatusBadRequest)
+		app.ErrorJson(w, errors.New("invalid credentials"), http.StatusBadRequest)
+		return
 	}
 
-	payload := utils.SuccessJson(fmt.Sprintf("Logged in user %s", user.Email))
+	payload := app.SuccessJson(
+		fmt.Sprintf("Logged in user %s", user.Email),
+		user,
+	)
 
-	utils.WriteJson(w, http.StatusOK, payload)
+	app.WriteJson(w, http.StatusAccepted, payload)
 }

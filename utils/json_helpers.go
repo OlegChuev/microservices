@@ -78,9 +78,10 @@ func (app *Config) ErrorJson(w http.ResponseWriter, err error, status ...int) er
 }
 
 // SuccessJson creates a JsonResponse with a success message and no error.
-func (app *Config) SuccessJson(msg string) JsonResponse {
+func (app *Config) SuccessJson(msg string, data any) JsonResponse {
 	return JsonResponse{
 		Error:   false,
 		Message: msg,
+		Data:    data,
 	}
 }

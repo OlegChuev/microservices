@@ -1,7 +1,6 @@
 package main
 
 import (
-	"auth/data"
 	"database/sql"
 	"fmt"
 	"log"
@@ -9,6 +8,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/OlegChuev/microservices/auth/data"
+	"github.com/OlegChuev/microservices/utils"
 	_ "github.com/jackc/pgconn"
 	_ "github.com/jackc/pgx/v4"
 	_ "github.com/jackc/pgx/v4/stdlib"
@@ -21,6 +22,7 @@ var counts int64
 type Config struct {
 	DB     *sql.DB
 	Models data.Models
+	*utils.Config
 }
 
 func main() {

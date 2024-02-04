@@ -4,11 +4,15 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/OlegChuev/microservices/utils"
 )
 
 const WEB_PORT = "80"
 
-type Config struct{}
+type Config struct {
+	*utils.Config
+}
 
 func main() {
 	app := Config{}
