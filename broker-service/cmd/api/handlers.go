@@ -2,13 +2,15 @@ package main
 
 import (
 	"net/http"
+
+	"github.com/OlegChuev/microservices/utils"
 )
 
 func (app *Config) Broker(w http.ResponseWriter, r *http.Request) {
-	payload := JsonResponse{
+	payload := utils.JsonResponse{
 		Error:   false,
 		Message: "Hit the Broker",
 	}
 
-	_ = app.WriteJson(w, http.StatusOK, payload)
+	utils.WriteJson(w, http.StatusOK, payload)
 }

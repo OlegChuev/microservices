@@ -1,4 +1,4 @@
-package main
+package utils
 
 import (
 	"encoding/json"
@@ -7,12 +7,17 @@ import (
 	"net/http"
 )
 
+// Config represents the configuration for the utility functions in this package.
+type Config struct{}
+
+// JsonResponse defines the structure of the JSON response used in the utility functions.
 type JsonResponse struct {
 	Error   bool   `json:"error"`
 	Message string `json:"message"`
 	Data    any    `json:"data,omitempty"`
 }
 
+// ReadJson reads and decodes JSON data from the request body, ensuring a single JSON value.
 func (app *Config) ReadJson(w http.ResponseWriter, r *http.Request, data any) error {
 	maxBytes := 1 * 1024 * 1024 // 1 MB
 
@@ -32,6 +37,7 @@ func (app *Config) ReadJson(w http.ResponseWriter, r *http.Request, data any) er
 	return nil
 }
 
+// WriteJson marshals data to JSON and writes it to the response writer with the specified status and optional headers.
 func (app *Config) WriteJson(w http.ResponseWriter, status int, data any, headers ...http.Header) error {
 	out, err := json.Marshal(data)
 	if err != nil {
@@ -55,6 +61,7 @@ func (app *Config) WriteJson(w http.ResponseWriter, status int, data any, header
 	return nil
 }
 
+// ErrorJson writes a JSON response with an error message and status code (default is http.StatusBadRequest).
 func (app *Config) ErrorJson(w http.ResponseWriter, err error, status ...int) error {
 	statusCode := http.StatusBadRequest
 
@@ -68,4 +75,12 @@ func (app *Config) ErrorJson(w http.ResponseWriter, err error, status ...int) er
 	}
 
 	return app.WriteJson(w, statusCode, payload)
+}
+
+// SuccessJson creates a JsonResponse with a success message and no error.
+func (app *Config) SuccessJson(msg string) JsonResponse {
+	return JsonResponse{
+		Error:   false,
+		Message: msg,
+	}
 }
